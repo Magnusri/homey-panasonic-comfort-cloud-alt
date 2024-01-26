@@ -18,6 +18,11 @@
     "nanoe_mode",
     "measure_power"
   ],
+  "capabilitiesOptions": {
+    "measure_power": {
+      "approximated": true
+    }
+  },
   "platforms": [
     "local"
   ],

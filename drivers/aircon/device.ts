@@ -53,7 +53,6 @@ export class MyDevice extends Homey.Device {
         let tokenTemp = this.homey.settings.get("token");
         let consumption = -255;
 
-        //console.log(tokenTemp);
         if (tokenTemp != undefined) {
           await axiosInstance.post(
             "/deviceHistoryData", {
@@ -71,8 +70,6 @@ export class MyDevice extends Homey.Device {
           }).catch(err => {
             console.log(err);
           })
-
-          //console.log(consumption);
   
           if (consumption != undefined && consumption != -255) {
             this.setCap('measure_power', consumption * 1000);
@@ -92,9 +89,6 @@ export class MyDevice extends Homey.Device {
       throw e;
     }
     await this.unsetWarning();
-
-    console.log(JSON.stringify(device));
-    console.log(JSON.stringify(device.parameters));
 
     await this.setCap('onoff', device.operate == Power.On);
     await this.setCap('measure_temperature', device.insideTemperature);
