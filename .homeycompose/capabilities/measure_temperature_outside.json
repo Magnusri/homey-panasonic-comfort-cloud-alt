@@ -1,0 +1,43 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Outside Temperature",
+      "no": "Utetemperatur"
+    },
+    "units": {
+      "en": "°C"
+    },
+    "insights": true,
+    "desc": {
+      "en": "Outside Temperature in degrees Celsius (°C)",
+      "no": "Utetemperatur i grader Celsius (°C)"
+    },
+    "decimals": 2,
+    "chartType": "spline",
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "$flow": {
+      "triggers": [
+        {
+          "id": "measure_temperature_outside_changed",
+          "highlight": true,
+          "title": {
+            "en": "The outside temperature changed",
+            "no": "Utetemperaturen ble endret"
+          },
+          "tokens": [
+            {
+              "name": "measure_temperature_outside",
+              "title": {
+                "en": "Outside Temperature",
+                "no": "Utetemperatur"
+              },
+              "type": "number",
+              "example": 23.5
+            }
+          ]
+        }
+      ]
+    }
+  }

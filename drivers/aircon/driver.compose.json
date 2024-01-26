@@ -6,6 +6,7 @@
   "capabilities": [
     "target_temperature",
     "measure_temperature",
+    "measure_temperature_outside",
     "onoff",
     "operation_mode",
     "eco_mode",

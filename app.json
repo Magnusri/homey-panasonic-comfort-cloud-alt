@@ -290,6 +290,7 @@
       "capabilities": [
         "target_temperature",
         "measure_temperature",
+        "measure_temperature_outside",
         "onoff",
         "operation_mode",
         "eco_mode",
@@ -519,6 +520,26 @@
           }
         }
       ]
+    },
+    "measure_temperature_outside": {
+      "type": "number",
+      "title": {
+        "en": "Outside Temperature",
+        "no": "Utetemperatur"
+      },
+      "units": {
+        "en": "°C"
+      },
+      "insights": true,
+      "desc": {
+        "en": "Outside Temperature in degrees Celsius (°C)",
+        "no": "Utetemperatur i grader Celsius (°C)"
+      },
+      "decimals": 2,
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
     },
     "nanoe_mode": {
       "type": "enum",
