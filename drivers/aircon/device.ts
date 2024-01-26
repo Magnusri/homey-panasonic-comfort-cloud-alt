@@ -75,7 +75,7 @@ export class MyDevice extends Homey.Device {
           //console.log(consumption);
   
           if (consumption != undefined && consumption != -255) {
-            this.setCap('measure_power', consumption * 100);
+            this.setCap('measure_power', consumption * 1000);
           }
         }
         
