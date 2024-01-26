@@ -290,6 +290,7 @@
       "capabilities": [
         "target_temperature",
         "measure_temperature",
+        "measure_temperature_inside",
         "measure_temperature_outside",
         "onoff",
         "operation_mode",
@@ -298,7 +299,8 @@
         "fan_speed",
         "air_swing_lr",
         "air_swing_ud",
-        "nanoe_mode"
+        "nanoe_mode",
+        "measure_power"
       ],
       "platforms": [
         "local"
@@ -520,6 +522,26 @@
           }
         }
       ]
+    },
+    "measure_temperature_inside": {
+      "type": "number",
+      "title": {
+        "en": "Inside Temperature",
+        "no": "Innetemperatur"
+      },
+      "units": {
+        "en": "°C"
+      },
+      "insights": true,
+      "desc": {
+        "en": "Inside Temperature in degrees Celsius (°C)",
+        "no": "Innetemperatur i grader Celsius (°C)"
+      },
+      "decimals": 2,
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
     },
     "measure_temperature_outside": {
       "type": "number",

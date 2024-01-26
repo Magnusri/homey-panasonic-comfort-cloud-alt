@@ -6,6 +6,7 @@
   "capabilities": [
     "target_temperature",
     "measure_temperature",
+    "measure_temperature_inside",
     "measure_temperature_outside",
     "onoff",
     "operation_mode",
@@ -14,7 +15,8 @@
     "fan_speed",
     "air_swing_lr",
     "air_swing_ud",
-    "nanoe_mode"
+    "nanoe_mode",
+    "measure_power"
   ],
   "platforms": [
     "local"
@@ -31,7 +33,9 @@
     {
       "id": "list_my_devices",
       "template": "list_devices",
-      "navigation": { "next": "add_my_devices" }
+      "navigation": {
+        "next": "add_my_devices"
+      }
     },
     {
       "id": "add_my_devices",

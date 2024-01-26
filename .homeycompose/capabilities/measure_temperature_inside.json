@@ -1,0 +1,43 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Inside Temperature",
+      "no": "Innetemperatur"
+    },
+    "units": {
+      "en": "°C"
+    },
+    "insights": true,
+    "desc": {
+      "en": "Inside Temperature in degrees Celsius (°C)",
+      "no": "Innetemperatur i grader Celsius (°C)"
+    },
+    "decimals": 2,
+    "chartType": "spline",
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "$flow": {
+      "triggers": [
+        {
+          "id": "measure_temperature_inside_changed",
+          "highlight": true,
+          "title": {
+            "en": "The inside temperature changed",
+            "no": "Innetemperaturen ble endret"
+          },
+          "tokens": [
+            {
+              "name": "measure_temperature_inside",
+              "title": {
+                "en": "Inside Temperature",
+                "no": "Innetemperatur"
+              },
+              "type": "number",
+              "example": 23.5
+            }
+          ]
+        }
+      ]
+    }
+  }

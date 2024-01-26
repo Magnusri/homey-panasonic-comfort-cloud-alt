@@ -1,4 +1,6 @@
 import Homey from 'homey';
+import axios, { AxiosError, AxiosInstance } from 'axios';
+import * as https from 'https';
 import { MyDriver } from './driver';
 import { Power, Parameters, OperationMode, EcoMode, AirSwingLR, AirSwingUD, FanAutoMode, FanSpeed, NanoeMode, Device } from 'panasonic-comfort-cloud-client';
 
@@ -24,9 +26,61 @@ export class MyDevice extends Homey.Device {
   
   async fetchFromService(forced:boolean) {
     // this.log("fetchFromService("+forced+")");
+
     let device:Device|null;
     try {
-      device = await this.driver.invokeClient(c => c.getDevice(this.id));
+      device = await this.driver.invokeClient(async c => {
+        let axiosInstance: AxiosInstance;
+
+        axiosInstance = axios.create({
+          baseURL: c.baseUrl,
+        });
+        
+        const agent = new https.Agent({
+          rejectUnauthorized: false,
+        });
+    
+        axiosInstance.defaults.httpsAgent = agent;
+        axiosInstance.defaults.headers.common['Accept'] = 'application/json; charset=UTF-8';
+        axiosInstance.defaults.headers.common['Content-Type'] = 'application/json';
+        axiosInstance.defaults.headers.common['X-APP-TYPE'] = 0;
+        axiosInstance.defaults.headers.common['X-APP-TIMESTAMP'] = 0;
+        axiosInstance.defaults.headers.common['X-APP-NAME'] = 'Comfort Cloud';
+        axiosInstance.defaults.headers.common['X-CFC-API-KEY'] = 0;
+        axiosInstance.defaults.headers.common['User-Agent'] = 'G-RAC';
+        axiosInstance.defaults.headers.common['X-APP-VERSION'] = "1.19.0";
+
+        let tokenTemp = this.homey.settings.get("token");
+        let consumption = -255;
+
+        //console.log(tokenTemp);
+        if (tokenTemp != undefined) {
+          await axiosInstance.post(
+            "/deviceHistoryData", {
+              "dataMode": 0,
+              "date": "20240126",
+              "deviceGuid": this.id,
+              "osTimezone": "+01:00"
+            }, {
+              headers: { 'X-User-Authorization': tokenTemp },
+            }
+          ).then((res) => {
+            let history = res.data.historyDataList;
+            let historyWithData = history.filter((i: any) => i.consumption != -255);
+            consumption = historyWithData?.[historyWithData?.length - 1]?.consumption;
+          }).catch(err => {
+            console.log(err);
+          })
+
+          //console.log(consumption);
+  
+          if (consumption != undefined && consumption != -255) {
+            this.setCap('measure_power', consumption * 100);
+          }
+        }
+        
+        return await c.getDevice(this.id);
+      });
       //TODO: the mock device throws 403 above
       if (!device)
         throw new Error("Device "+this.id+" not found.");
@@ -39,8 +93,12 @@ export class MyDevice extends Homey.Device {
     }
     await this.unsetWarning();
 
+    console.log(JSON.stringify(device));
+    console.log(JSON.stringify(device.parameters));
+
     await this.setCap('onoff', device.operate == Power.On);
     await this.setCap('measure_temperature', device.insideTemperature);
+    await this.setCap('measure_temperature_inside', device.insideTemperature);
     await this.setCap('measure_temperature_outside', device.outTemperature);
     await this.setCap('target_temperature', device.temperatureSet);
     await this.setCap('operation_mode', OperationMode[device.operationMode]);
