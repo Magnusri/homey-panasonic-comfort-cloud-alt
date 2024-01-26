@@ -1,8 +1,9 @@
 # Panasonic Comfort Cloud Alternative
+This is forked from [ugumba/homey-panasonic-comfort-cloud-alt](https://github.com/ugumba/homey-panasonic-comfort-cloud-alt) with the purpose of testing out some other features of certain ac units.
 
-This is forked from ugumba/homey-panasonic-comfort-cloud-alt with the purpose of testing out some other features of certain ac units.
-
-
+# Copyright and Licensing
+All copyright and licencing rules are the same as original forked repo.
+I encourage anyone to use whatever they want of my additions or alterations in any fashion within these licenses.
 
 # Credits (Most following ugumba's credits)
   * ugumba and repo [Panasonic Comfort Cloud Alternative by Ugumba/Robert Schmidt](https://github.com/ugumba/homey-panasonic-comfort-cloud-alt)
