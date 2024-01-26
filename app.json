@@ -546,7 +546,8 @@
       "chartType": "spline",
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/temp_inside.svg"
     },
     "measure_temperature_outside": {
       "type": "number",
@@ -566,7 +567,8 @@
       "chartType": "spline",
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/temp_outside.svg"
     },
     "nanoe_mode": {
       "type": "enum",
