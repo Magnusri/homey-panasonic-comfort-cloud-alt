@@ -67,7 +67,7 @@ export class MyDevice extends Homey.Device {
           ).then((res) => {
             let history = res.data.historyDataList;
             let historyWithData = history.filter((i: any) => i.consumption != -255);
-            consumption = historyWithData?.[historyWithData?.length - 1]?.consumption;
+            consumption = historyWithData?.[historyWithData?.length - 2]?.consumption;
           }).catch(err => {
             console.log(err);
           })
