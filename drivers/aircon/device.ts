@@ -54,10 +54,18 @@ export class MyDevice extends Homey.Device {
         let consumption = -255;
 
         if (tokenTemp != undefined) {
+          let date = new Date();
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1;
+          let day = date.getDate();
+
+          if (month < 10) month = "0" + month;
+          if (day < 10) day = "0" + day;
+          
           await axiosInstance.post(
             "/deviceHistoryData", {
               "dataMode": 0,
-              "date": "20240126",
+              "date": "" + year + month + day,
               "deviceGuid": this.id,
               "osTimezone": "+01:00"
             }, {
