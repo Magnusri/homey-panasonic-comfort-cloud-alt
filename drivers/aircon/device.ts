@@ -59,13 +59,16 @@ export class MyDevice extends Homey.Device {
           let month = date.getMonth() + 1;
           let day = date.getDate();
 
-          if (month < 10) month = "0" + month;
-          if (day < 10) day = "0" + day;
+          let adjustedMonth;
+          let adjustedDay;
+
+          if (month < 10) adjustedMonth = "0" + month; else adjustedMonth = month.toString();
+          if (day < 10) adjustedDay = "0" + day; else adjustedDay = day.toString();
           
           await axiosInstance.post(
             "/deviceHistoryData", {
               "dataMode": 0,
-              "date": "" + year + month + day,
+              "date": "" + year + adjustedMonth + adjustedDay,
               "deviceGuid": this.id,
               "osTimezone": "+01:00"
             }, {
