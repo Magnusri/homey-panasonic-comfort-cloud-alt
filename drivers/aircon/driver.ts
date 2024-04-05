@@ -2,15 +2,45 @@ import Homey from 'homey';
 import { ComfortCloudClient, TokenExpiredError } from 'panasonic-comfort-cloud-client';
 import { MyDevice } from './device';
 
+// This is a workaround for using node-fetch in Homey apps
+// Ignore ts errors for this line
+// @ts-ignore
+const fetch = (...args: any) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 export class MyDriver extends Homey.Driver {
 
   client: ComfortCloudClient | null | undefined = undefined;
   ignoreSettings:boolean=false;
 
+  async getLatestAppVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let appleAppId = "1348640525"; // ID of the Panasonic Comfort Cloud app on the Apple App Store
+
+      let url = "https://itunes.apple.com/lookup?id=" + appleAppId;
+      
+      // Fetch the app details from the Apple App Store using node-fetch
+      fetch(url)
+        .then(response => response.json())
+        .then((data: any) => {
+          if (data.resultCount == 0) {
+            reject("No app found with ID " + appleAppId);
+          } else {
+            resolve(data.results[0].version);
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
+
   async getClient() : Promise<ComfortCloudClient> {
     if (this.client === undefined)
     {
-      let appVersion = "1.20.1";
+      let appVersion = "";
+
+      appVersion = await this.getLatestAppVersion();
+
       this.log('initializing client ('+appVersion+')');
       this.client = new ComfortCloudClient(appVersion);
       let token:string = this.homey.settings.get("token");
