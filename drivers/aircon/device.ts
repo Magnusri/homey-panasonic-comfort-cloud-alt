@@ -39,6 +39,8 @@ export class MyDevice extends Homey.Device {
         const agent = new https.Agent({
           rejectUnauthorized: false,
         });
+
+        let appVersion = this.homey.settings.get("appVersion");
     
         axiosInstance.defaults.httpsAgent = agent;
         axiosInstance.defaults.headers.common['Accept'] = 'application/json; charset=UTF-8';
@@ -48,7 +50,7 @@ export class MyDevice extends Homey.Device {
         axiosInstance.defaults.headers.common['X-APP-NAME'] = 'Comfort Cloud';
         axiosInstance.defaults.headers.common['X-CFC-API-KEY'] = 0;
         axiosInstance.defaults.headers.common['User-Agent'] = 'G-RAC';
-        axiosInstance.defaults.headers.common['X-APP-VERSION'] = "1.20.0";
+        axiosInstance.defaults.headers.common['X-APP-VERSION'] = appVersion;
 
         let tokenTemp = this.homey.settings.get("token");
         let consumption = -255;

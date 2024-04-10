@@ -40,6 +40,7 @@ export class MyDriver extends Homey.Driver {
       let appVersion = "";
 
       appVersion = await this.getLatestAppVersion();
+      this.homey.settings.set("appVersion", appVersion);
 
       this.log('initializing client ('+appVersion+')');
       this.client = new ComfortCloudClient(appVersion);
