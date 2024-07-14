@@ -2,6 +2,7 @@ import Homey from 'homey';
 import { ComfortCloudClient, TokenExpiredError } from 'panasonic-comfort-cloud-client';
 import { MyDevice } from './device';
 
+// From https://github.com/Magnusri/homey-panasonic-comfort-cloud-alt/blob/master/drivers/aircon/driver.ts
 // This is a workaround for using node-fetch in Homey apps
 // Ignore ts errors for this line
 // @ts-ignore
@@ -12,12 +13,11 @@ export class MyDriver extends Homey.Driver {
   client: ComfortCloudClient | null | undefined = undefined;
   ignoreSettings:boolean=false;
 
+  // From https://github.com/Magnusri/homey-panasonic-comfort-cloud-alt/blob/master/drivers/aircon/driver.ts
   async getLatestAppVersion(): Promise<string> {
     return new Promise((resolve, reject) => {
       let appleAppId = "1348640525"; // ID of the Panasonic Comfort Cloud app on the Apple App Store
-
       let url = "https://itunes.apple.com/lookup?id=" + appleAppId;
-      
       // Fetch the app details from the Apple App Store using node-fetch
       fetch(url)
         .then(response => response.json())
@@ -37,39 +37,31 @@ export class MyDriver extends Homey.Driver {
   async getClient() : Promise<ComfortCloudClient> {
     if (this.client === undefined)
     {
-      let appVersion = "";
-
-      appVersion = await this.getLatestAppVersion();
-      this.homey.settings.set("appVersion", appVersion);
-
+      let appVersion = "1.21.0";
+      try {
+        appVersion = await this.getLatestAppVersion();
+      }
+      catch (e) {
+        this.error('pcc app version query to itunes failed', e);
+      }
       this.log('initializing client ('+appVersion+')');
       this.client = new ComfortCloudClient(appVersion);
-      let token:string = this.homey.settings.get("token");
-      if (!token || token.length == 0)
+      const username:string = this.homey.settings.get("username");
+      const password:string = this.homey.settings.get("password");
+      if (!username || !password)
       {
-        this.log('missing token');
-        const username:string = this.homey.settings.get("username");
-        const password:string = this.homey.settings.get("password");
-        if (!username || !password)
-        {
-          this.error('missing crdentials');
-          this.client = null;
-          throw new Error('Provide credentials in app settings.');
-        }
-        this.log('authenticating '+username.replace("@","[at]").replace(".","[dot]"));
-        try {
-          token = await this.client.login(username, password);
-          this.saveToken(token);
-          this.log('saved token');
-        }
-        catch (e) {
-          this.error('login failed:', e);
-          this.client = null; 
-        }
+        this.error('missing crdentials');
+        this.client = null;
+        throw new Error('Provide credentials in app settings.');
       }
-      else {
-        this.client.token = token;
-        this.log('loaded token');
+      this.log('authenticating '+username.replace("@","[at]").replace(".","[dot]"));
+      try {
+        await this.client.login(username, password);
+        this.log('authenticated');
+      }
+      catch (e) {
+        this.error('login failed:', e);
+        this.client = null; 
       }
     }
     if (this.client === null)
@@ -105,16 +97,9 @@ export class MyDriver extends Homey.Driver {
   resetClient() {
     this.log('resetClient');
     this.client = undefined;
-    this.saveToken(null);
 
     this.getDevices()
       .forEach(device => (device as MyDevice).fetchAndRestartTimer());
-  }
-
-  saveToken(token:string|null) {
-    this.ignoreSettings=true;
-    this.homey.settings.set("token", token);
-    this.ignoreSettings=false;
   }
 
   /**
